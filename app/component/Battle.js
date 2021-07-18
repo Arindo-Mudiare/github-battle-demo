@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import Results from "./Results";
 import {
   FaUserFriends,
   FaFighterJet,
@@ -134,9 +135,11 @@ export default class Battle extends Component {
     this.state = {
       playerOne: null,
       playerTwo: null,
+      battle: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   handleSubmit(id, player) {
@@ -144,9 +147,18 @@ export default class Battle extends Component {
       [id]: player,
     });
   }
+  handleReset(id) {
+    this.setState({
+      [id]: null,
+    });
+  }
 
   render() {
-    const { playerOne, playerTwo } = this.state;
+    const { playerOne, playerTwo, battle } = this.state;
+
+    if (battle === true) {
+      return <Results playerOne={playerOne} playerTwo={playerTwo} />;
+    }
 
     return (
       <Fragment>
@@ -163,7 +175,7 @@ export default class Battle extends Component {
               <PlayerPreview
                 username={playerOne}
                 label="Player One"
-                onReset={() => ({})}
+                onReset={() => this.handleReset("playerOne")}
               />
             )}
             {playerTwo === null ? (
@@ -175,10 +187,18 @@ export default class Battle extends Component {
               <PlayerPreview
                 username={playerTwo}
                 label="Player Two"
-                onReset={() => ({})}
+                onReset={() => this.handleReset("playerTwo")}
               />
             )}
           </div>
+          {playerOne && playerTwo && (
+            <button
+              className="btn dark-btn btn-space"
+              onClick={() => this.setState({ battle: true })}
+            >
+              Battle
+            </button>
+          )}
         </div>
       </Fragment>
     );
