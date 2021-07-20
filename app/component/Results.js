@@ -12,6 +12,7 @@ import {
 import Card from "./Card";
 import Loading from "./Loading";
 import Tooltip from "./Tooltip";
+import { ThemeConsumer } from "../contexts/Theme";
 
 function ProfileList({ profile }) {
   return (
@@ -22,17 +23,17 @@ function ProfileList({ profile }) {
       </li>
       {profile.location && (
         <li>
-        <Tooltip text="User's Location">
-          <FaCompass color="rgb(239, 115, 115)" size={22} />
-          {profile.location}
+          <Tooltip text="User's Location">
+            <FaCompass color="rgb(239, 115, 115)" size={22} />
+            {profile.location}
           </Tooltip>
         </li>
       )}
       {profile.company && (
         <li>
-        <Tooltip text="User's Company">
-          <FaBriefcase color="#795548" size={22} />
-          {profile.company}
+          <Tooltip text="User's Company">
+            <FaBriefcase color="#795548" size={22} />
+            {profile.company}
           </Tooltip>
         </li>
       )}
@@ -113,9 +114,18 @@ export default class Results extends Component {
             <ProfileList profile={loser.profile} />
           </Card>
         </div>
-        <button className="btn dark-btn btn-space" onClick={this.props.onReset}>
-          Reset
-        </button>
+        <ThemeConsumer>
+          {({ theme }) => (
+            <button
+              className={`btn ${
+                theme === "dark" ? "light-btn" : "dark-btn"
+              } btn-space`}
+              onClick={this.props.onReset}
+            >
+              Reset
+            </button>
+          )}
+        </ThemeConsumer>
       </Fragment>
     );
   }
