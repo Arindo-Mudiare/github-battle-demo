@@ -1,12 +1,14 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import Battle from "./component/Battle";
-import Popular from "./component/Popular";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 import "./index.css";
+import Popular from "./component/Popular";
+import Battle from "./component/Battle";
+import Results from "./component/Results";
 import { ThemeProvider } from "./contexts/Theme";
 import Nav from "./component/Nav";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-export default class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
 
@@ -21,15 +23,19 @@ export default class App extends Component {
   }
   render() {
     return (
-      <ThemeProvider value={this.state}>
-        <div className={this.state.theme}>
-          <div className="container">
-            <Nav />
-            <Popular />
-            <Battle />
+      <Router>
+        <ThemeProvider value={this.state}>
+          <div className={this.state.theme}>
+            <div className="container">
+              <Nav />
+
+              <Route exact path="/" component={Popular} />
+              <Route exact path="/battle" component={Battle} />
+              <Route path="/battle/results" component={Results} />
+            </div>
           </div>
-        </div>
-      </ThemeProvider>
+        </ThemeProvider>
+      </Router>
     );
   }
 }

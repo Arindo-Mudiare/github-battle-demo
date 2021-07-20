@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from "react";
-import Results from "./Results";
+import * as React from "react";
 import {
   FaUserFriends,
   FaFighterJet,
@@ -7,9 +6,10 @@ import {
   FaTimesCircle,
 } from "react-icons/fa";
 import PropTypes from "prop-types";
+import Results from "./Results";
 import { ThemeConsumer } from "../contexts/Theme";
+import { Link } from "react-router-dom";
 
-// Instructions component
 function Instructions() {
   return (
     <ThemeConsumer>
@@ -18,10 +18,10 @@ function Instructions() {
           <h1 className="center-text header-lg">Instructions</h1>
           <ol className="container-sm grid center-text battle-instructions">
             <li>
-              <h3 className="header-sm">Enter Two Github Users</h3>
+              <h3 className="header-sm">Enter two Github users</h3>
               <FaUserFriends
                 className={`bg-${theme}`}
-                color="rgb(255,191,116)"
+                color="rgb(255, 191, 116)"
                 size={140}
               />
             </li>
@@ -34,7 +34,7 @@ function Instructions() {
               />
             </li>
             <li>
-              <h3 className="header-sm">See the Winners</h3>
+              <h3 className="header-sm">See the winners</h3>
               <FaTrophy
                 className={`bg-${theme}`}
                 color="rgb(255, 215, 0)"
@@ -48,8 +48,7 @@ function Instructions() {
   );
 }
 
-// PlayerInput Component
-export class PlayerInput extends Component {
+class PlayerInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,7 +64,6 @@ export class PlayerInput extends Component {
 
     this.props.onSubmit(this.state.username);
   }
-
   handleChange(event) {
     this.setState({
       username: event.target.value,
@@ -77,7 +75,7 @@ export class PlayerInput extends Component {
         {({ theme }) => (
           <form className="column player" onSubmit={this.handleSubmit}>
             <label htmlFor="username" className="player-label">
-              {this.props.username}
+              {this.props.label}
             </label>
             <div className="row player-inputs">
               <input
@@ -104,7 +102,6 @@ export class PlayerInput extends Component {
   }
 }
 
-// proptypes declaration for playerinput component
 PlayerInput.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
@@ -119,9 +116,9 @@ function PlayerPreview({ username, onReset, label }) {
           <div className={`row bg-${theme}`}>
             <div className="player-info">
               <img
+                className="avatar-small"
                 src={`https://github.com/${username}.png?size=200`}
                 alt={`Avatar for ${username}`}
-                className="avatar-small"
               />
               <a href={`https://github.com/${username}`} className="link">
                 {username}
@@ -137,28 +134,24 @@ function PlayerPreview({ username, onReset, label }) {
   );
 }
 
-// proptypes declaration for playerpreview component
 PlayerPreview.propTypes = {
   username: PropTypes.string.isRequired,
   onReset: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
 };
 
-// Battle Component
-export default class Battle extends Component {
+export default class Battle extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       playerOne: null,
       playerTwo: null,
-      battle: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
   }
-
   handleSubmit(id, player) {
     this.setState({
       [id]: player,
@@ -169,30 +162,14 @@ export default class Battle extends Component {
       [id]: null,
     });
   }
-
   render() {
-    const { playerOne, playerTwo, battle } = this.state;
-
-    if (battle === true) {
-      return (
-        <Results
-          playerOne={playerOne}
-          playerTwo={playerTwo}
-          onReset={() =>
-            this.setState({
-              playerOne: null,
-              playerTwo: null,
-              battle: false,
-            })
-          }
-        />
-      );
-    }
+    const { playerOne, playerTwo } = this.state;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Instructions />
-        <div className="player-container">
+
+        <div className="players-container">
           <h1 className="center-text header-lg">Players</h1>
           <div className="row space-around">
             {playerOne === null ? (
@@ -207,6 +184,7 @@ export default class Battle extends Component {
                 onReset={() => this.handleReset("playerOne")}
               />
             )}
+
             {playerTwo === null ? (
               <PlayerInput
                 label="Player Two"
@@ -220,16 +198,20 @@ export default class Battle extends Component {
               />
             )}
           </div>
+
           {playerOne && playerTwo && (
-            <button
+            <Link
               className="btn dark-btn btn-space"
-              onClick={() => this.setState({ battle: true })}
+              to={{
+                pathname: "/battle/results",
+                search: `?playerOne=${playerOne}&playerTwo=${playerTwo}`,
+              }}
             >
               Battle
-            </button>
+            </Link>
           )}
         </div>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

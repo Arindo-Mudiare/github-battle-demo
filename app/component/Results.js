@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { battle } from "../utils/api";
 import { PropTypes } from "prop-types";
+import { Link } from "react-router-dom";
 import {
   FaCompass,
   FaBriefcase,
@@ -13,6 +14,7 @@ import Card from "./Card";
 import Loading from "./Loading";
 import Tooltip from "./Tooltip";
 import { ThemeConsumer } from "../contexts/Theme";
+import queryString from "query-string";
 
 function ProfileList({ profile }) {
   return (
@@ -64,7 +66,9 @@ export default class Results extends Component {
     };
   }
   componentDidMount() {
-    const { playerOne, playerTwo } = this.props;
+    const { playerOne, playerTwo } = queryString.parse(
+      this.props.location.search
+    );
 
     battle([playerOne, playerTwo])
       .then((players) => {
@@ -86,7 +90,7 @@ export default class Results extends Component {
     const { winner, loser, error, loading } = this.state;
 
     if (loading === true) {
-      return <Loading />;
+      return <Loading text="Battling" />;
     }
 
     if (error) {
@@ -116,23 +120,17 @@ export default class Results extends Component {
         </div>
         <ThemeConsumer>
           {({ theme }) => (
-            <button
+            <Link
               className={`btn ${
                 theme === "dark" ? "light-btn" : "dark-btn"
               } btn-space`}
-              onClick={this.props.onReset}
+              to="/battle"
             >
               Reset
-            </button>
+            </Link>
           )}
         </ThemeConsumer>
       </Fragment>
     );
   }
 }
-
-Results.propTypes = {
-  playerOne: PropTypes.string.isRequired,
-  playerTwo: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired,
-};
