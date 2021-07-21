@@ -3,6 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const htmlPlugin = new HtmlWebPackPlugin({
   template: "./app/index.html",
   filename: "./index.html",
+  minify: false,
 });
 
 module.exports = {
@@ -19,7 +20,8 @@ module.exports = {
       { test: /\.css$/, use: ["style-loader", "css-loader"] },
     ],
   },
-  mode: "development",
+  mode: "production",
+  // mode: process.env.NODE_ENV === "production" ? "production" : "development",
   plugins: [htmlPlugin],
   devServer: {
     historyApiFallback: true,

@@ -1,13 +1,15 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "./index.css";
-import Popular from "./component/Popular";
-import Battle from "./component/Battle";
-import Results from "./component/Results";
 import { ThemeProvider } from "./contexts/Theme";
 import Nav from "./component/Nav";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Loading from "./component/Loading";
 
+// Dynamic Imports
+const Popular = React.lazy(() => import("./component/Popular"));
+const Battle = React.lazy(() => import("./component/Battle"));
+const Results = React.lazy(() => import("./component/Results"));
 class App extends React.Component {
   state = {
     theme: "light",
@@ -25,12 +27,14 @@ class App extends React.Component {
           <div className={this.state.theme}>
             <div className="container">
               <Nav />
-              <Switch>
-                <Route exact path="/" component={Popular} />
-                <Route exact path="/battle" component={Battle} />
-                <Route path="/battle/results" component={Results} />
-                <Route render={() => <h1>404 Page not found!!!</h1>} />
-              </Switch>
+              <React.Suspense fallback={<Loading />}>
+                <Switch>
+                  <Route exact path="/" component={Popular} />
+                  <Route exact path="/battle" component={Battle} />
+                  <Route path="/battle/results" component={Results} />
+                  <Route render={() => <h1>404 Page not found!!!</h1>} />
+                </Switch>
+              </React.Suspense>
             </div>
           </div>
         </ThemeProvider>
