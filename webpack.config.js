@@ -5,6 +5,10 @@ const htmlPlugin = new HtmlWebPackPlugin({
   filename: "./index.html",
   minify: false,
 });
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyPlugin = new CopyWebpackPlugin({
+  patterns: [{ from: "_redirects" }],
+});
 
 module.exports = {
   entry: "./app/index.js",
@@ -22,7 +26,8 @@ module.exports = {
   },
   mode: "production",
   // mode: process.env.NODE_ENV === "production" ? "production" : "development",
-  plugins: [htmlPlugin],
+  plugins: [htmlPlugin, CopyPlugin],
+
   devServer: {
     historyApiFallback: true,
   },
