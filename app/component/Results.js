@@ -116,7 +116,7 @@ export default class Results extends Component {
           </Card>
         </div>
         <ThemeConsumer>
-          {({ theme }) => (
+          {(theme) => (
             <Link
               className={`btn ${
                 theme === "dark" ? "light-btn" : "dark-btn"
