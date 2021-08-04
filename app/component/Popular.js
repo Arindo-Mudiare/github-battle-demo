@@ -9,6 +9,7 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import Loading from "./Loading";
+import Tooltip from "./Tooltip";
 
 function LanguagesNav({ selected, onUpdateLanguage }) {
   const languages = ["All", "Javascript", "Ruby", "Java", "CSS", "Python"];
@@ -51,14 +52,18 @@ function ReposGrid({ repos }) {
               name={login}
             >
               <ul className="card-list">
+              <Tooltip text="User's Name">
                 <li>
                   <FaUser color="rgba(255,191,116)" size={22} />
                   <a href={`https://github.com/${login}`}>{login}</a>
                 </li>
+              </Tooltip>
+              <Tooltip text="User's number of stars">
                 <li>
                   <FaStar color="rgba(255,215,0)" size={22} />
                   {stargazers_count.toLocaleString()}stars
                 </li>
+              </Tooltip>
                 <li>
                   <FaCodeBranch color="rgba(255,195,245)" size={22} />
                   {forks.toLocaleString()}forks
@@ -75,6 +80,32 @@ function ReposGrid({ repos }) {
     </ul>
   );
 }
+
+function popularReducer(state, action) {
+  if (action.type === 'success') {
+    return {
+      ...state,
+      [action.selectedLanguage] : action.repos,
+      error: null
+    }
+  } else if (action.type === 'error') {
+    return {
+      ...state,
+      error: action.error.message
+    }
+  } else {
+  throw new Error(`That action type isn't supported.`)
+}
+}
+
+export default function Popular() {
+  const [selectedLanguage, setSelectedLanguage] = React.useState('All')
+  const [state, dispatch ] = React.useReducer(
+    popularReducer,
+    { error: null }
+  )
+}
+
 export default class Popular extends Component {
   state = {
     selectedLanguage: "All",

@@ -49,6 +49,7 @@ function PlayerInput(onSubmit, label) {
     onSubmit(username);
   };
   const handleChange = (e) => setUsername(e.target.value);
+  
   const theme = React.useContext(ThemeContext);
 
   return (
@@ -86,8 +87,6 @@ PlayerInput.propTypes = {
 function PlayerPreview({ username, onReset, label }) {
   const theme = React.useContext(ThemeContext);
   return (
-    <ThemeConsumer>
-      {(theme) => (
         <div className="column player">
           <h3 className="player-label">{label}</h3>
           <div className={`row bg-${theme}`}>
@@ -107,9 +106,6 @@ function PlayerPreview({ username, onReset, label }) {
           </div>
         </div>
       )}
-    </ThemeConsumer>
-  );
-}
 
 PlayerPreview.propTypes = {
   username: PropTypes.string.isRequired,

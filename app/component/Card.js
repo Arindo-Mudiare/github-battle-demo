@@ -1,6 +1,6 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { ThemeConsumer } from "../contexts/Theme";
+import ThemeContext from "../contexts/Theme";
 export default function Card({
   header,
   subheader,
@@ -9,9 +9,8 @@ export default function Card({
   name,
   children,
 }) {
+  const theme = React.useContext(ThemeContext);
   return (
-    <ThemeConsumer>
-      {(theme) => (
         <div className={`card bg-${theme}`}>
           <h4 className="header-lg center-text">{header}</h4>
           <img src={avatar} alt={`Avatar for ${name}`} className="avatar" />
@@ -24,9 +23,6 @@ export default function Card({
           {children}
         </div>
       )}
-    </ThemeConsumer>
-  );
-}
 
 Card.propTypes = {
   header: PropTypes.string.isRequired,
